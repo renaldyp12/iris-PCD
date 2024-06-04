@@ -106,29 +106,38 @@ def detect_iris(image, center, radius):
 
 
 def main():
-  # Baca gambar
   image = cv2.imread('images/chingycr1.bmp')
   gray = grayscale(image)
   binary = threshold(gray, 95, 255)
   blurred = cv2.GaussianBlur(binary, (9,9), 2)
-  # edges = cv2.Canny(blurred, 20, 100)
   binary = bitwiseNot(blurred)
   cv2.imshow('Edge Image 1', binary)
+
+  eye = threshold(gray, 170, 255)
+  blurredEye = cv2.GaussianBlur(eye, (9, 9), 2)
+
+  binaryEye = bitwiseNot(blurredEye)
+  binaryEye = cv2.Canny(binaryEye, 20, 100)
+  cv2.imshow('Edge Image 2', binaryEye)
   #
   centerRetina, radiusRetina = find_center(binary)
+  centerEye, radiusEye = find_center(binaryEye)
 
   # Deteksi pupil
   smoothed = detect_pupil(image)
-  # print(smoothed)
   center, radius = find_center(smoothed)
-  # print(center, radius)
-  # Deteksi iris
-  iris_center, iris_radius = detect_iris(image, center, radius)
-  # cv2.imshow('Edge Image', blurred)
+
+  axes_lengths = (radiusEye, 75)  # Radius for both axes
+  angle = 0
+  start_angle = 0
+  end_angle = 360
+  color = (0, 0, 255)  # Green color in BGR
+  thickness = 2
 
   if center and radius:
     cv2.circle(image, center, radius, (255, 0, 0), 2)
     cv2.circle(image, centerRetina, radiusRetina, (0, 255, 0), 2)
+    cv2.ellipse(image, centerEye, axes_lengths, angle, start_angle, end_angle, color, thickness)
   #if iris_center and iris_radius:
     # cv2.circle(image, iris_center, iris_radius, (0, 255, 0), 2)
 
