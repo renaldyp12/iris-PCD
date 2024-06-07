@@ -106,7 +106,7 @@ def detect_iris(image, center, radius):
 
 
 def main():
-  image = cv2.imread('images/chingycr1.bmp')
+  image = cv2.imread('images/aevar2.bmp')
   gray = grayscale(image)
   binary = threshold(gray, 95, 255)
   blurred = cv2.GaussianBlur(binary, (9,9), 2)
